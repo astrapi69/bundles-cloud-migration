@@ -22,8 +22,14 @@ public class ApplicationProperties {
 	String dbPassword;
 	String dir;
 	String csvDir;
-	String brosFileName;
-
-	String friendsFileName;
+	String countriesFileName;
+	String languagesFileName;
+	String languageLocalesFileName;
+	String bundleApplicationsFileName;
+	String basenamesFileName;
+	String bundlenamesFileName;
+	String propertiesKeysFileName;
+	String propertiesValuesFileName;
+	String resourcebundlesFileName;
 
 }

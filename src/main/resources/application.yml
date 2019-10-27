@@ -1,16 +1,23 @@
 
 app:
-  name: spring-batch-template # TODO change after cloning template project
-  dir: ${user.home}/.csv-import-to-db # TODO change after cloning template project
-  db-name: bros  # TODO change after cloning template project
+  name: bundles-cloud-migration
+  dir: ${user.home}/.bundles-cloud-migration
+  db-name: newbundles
   db-host: localhost
   db-port: 5432
   db-url-prefix: jdbc:postgresql://
-  db-username: postgres  # TODO change after cloning template project
-  db-password: postgres # TODO change after cloning template project
+  db-username: postgres
+  db-password: postgres
   csv-dir: ${app.dir}
-  bros-filename: bros.csv # TODO change after cloning template project
-  friends-filename: friends.csv # TODO change after cloning template project
+  countries-filename: bundles_public_countries.csv
+  languages-filename: bundles_public_languages.csv
+  language-locales-filename: bundles_public_language_locales.csv
+  bundle-applications-filename: bundles_public_bundle_applications.csv
+  basenames-filename: bundles_public_basenames.csv
+  bundlenames-filename: bundles_public_bundlenames.csv
+  properties-keys-filename: bundles_public_properties_keys.csv
+  properties-values-filename: bundles_public_properties_values.csv
+  resourcebundles-filename: bundles_public_resourcebundles.csv
 
 spring:
   main:

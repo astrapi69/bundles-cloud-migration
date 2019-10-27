@@ -2,10 +2,10 @@ package de.alpharogroup.spring.batch.cvs2db.configuration;
 
 import javax.persistence.EntityManagerFactory;
 
-import de.alpharogroup.spring.batch.cvs2db.dto.Bro;
-import de.alpharogroup.spring.batch.cvs2db.entity.BrosEntity;
+import de.alpharogroup.spring.batch.cvs2db.dto.BaseName;
+import de.alpharogroup.spring.batch.cvs2db.entity.BaseNames;
+import de.alpharogroup.spring.batch.cvs2db.mapper.BaseNamesMapper;
 import de.alpharogroup.spring.batch.factory.SpringBatchObjectFactory;
-import de.alpharogroup.spring.batch.cvs2db.mapper.BrosEntityMapper;
 import org.mapstruct.factory.Mappers;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
@@ -24,7 +24,8 @@ import lombok.experimental.FieldDefaults;
 @Configuration
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CsvFileToBrosStepConfiguration {
+public class CsvFileToBasenamesStepConfiguration
+{
 
 	EntityManagerFactory entityManagerFactory;
 
@@ -35,27 +36,27 @@ public class CsvFileToBrosStepConfiguration {
 	PlatformTransactionManager transactionManager;
 
 	@Bean
-	public FileSystemResource brosResource() {
-		String filePath = applicationProperties.getCsvDir() + "/" + applicationProperties.getBrosFileName();
+	public FileSystemResource basenamesResource() {
+		String filePath = applicationProperties.getCsvDir() + "/" + applicationProperties.getBasenamesFileName();
 		return new FileSystemResource(filePath);
 	}
 
 	@Bean
-	public FlatFileItemReader<Bro> brosReader() {
-		return SpringBatchObjectFactory.newCsvFileItemReader(brosResource(), Bro.class, ";", 1);
+	public FlatFileItemReader<BaseName> basenamesReader() {
+		return SpringBatchObjectFactory.newCsvFileItemReader(basenamesResource(), BaseName.class, ",", 1);
 	}
 
 	@Bean
-	public JpaItemWriter<BrosEntity> brosWriter() {
+	public JpaItemWriter<BaseNames> basenamesWriter() {
 		return SpringBatchObjectFactory.newJpaItemWriter(entityManagerFactory);
 	}
 
 	@Bean
-	public ItemProcessor<Bro, BrosEntity> brosProcessor() {
-		return new ItemProcessor<Bro, BrosEntity>() {
+	public ItemProcessor<BaseName, BaseNames> basenamesProcessor() {
+		return new ItemProcessor<BaseName, BaseNames>() {
 			@Override
-			public BrosEntity process(Bro item) throws Exception {
-				BrosEntity entity = Mappers.getMapper(BrosEntityMapper.class).toEntity(item);
+			public BaseNames process(BaseName item) throws Exception {
+				BaseNames entity = Mappers.getMapper(BaseNamesMapper.class).toEntity(item);
 				return entity;
 			}
 		};
@@ -63,8 +64,8 @@ public class CsvFileToBrosStepConfiguration {
 
 	@Bean
 	public Step csvFileToBrosStep() {
-		return stepBuilderFactory.get("csvFileToBrosStep").<Bro, BrosEntity>chunk(10).reader(brosReader())
-				.processor(brosProcessor()).writer(brosWriter()).transactionManager(transactionManager).build();
+		return stepBuilderFactory.get("csvFileToBrosStep").<BaseName, BaseNames>chunk(10).reader(basenamesReader())
+				.processor(basenamesProcessor()).writer(basenamesWriter()).transactionManager(transactionManager).build();
 	}
 
 }

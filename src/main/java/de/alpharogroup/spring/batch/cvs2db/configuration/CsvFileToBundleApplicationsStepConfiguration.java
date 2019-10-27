@@ -3,10 +3,10 @@ package de.alpharogroup.spring.batch.cvs2db.configuration;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceException;
 
-import de.alpharogroup.spring.batch.cvs2db.dto.Friend;
-import de.alpharogroup.spring.batch.cvs2db.entity.FriendsEntity;
+import de.alpharogroup.spring.batch.cvs2db.dto.BundleApplication;
+import de.alpharogroup.spring.batch.cvs2db.entity.BundleApplications;
+import de.alpharogroup.spring.batch.cvs2db.mapper.BundleApplicationsMapper;
 import de.alpharogroup.spring.batch.factory.SpringBatchObjectFactory;
-import de.alpharogroup.spring.batch.cvs2db.mapper.FriendsEntityMapper;
 import org.mapstruct.factory.Mappers;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
@@ -26,7 +26,8 @@ import lombok.experimental.FieldDefaults;
 @Configuration
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CsvFileToFriendsStepConfiguration {
+public class CsvFileToBundleApplicationsStepConfiguration
+{
 
 	EntityManagerFactory entityManagerFactory;
 
@@ -37,28 +38,28 @@ public class CsvFileToFriendsStepConfiguration {
 	PlatformTransactionManager transactionManager;
 
 	@Bean
-	public FileSystemResource friendsResource() {
-		String filePath = applicationProperties.getCsvDir() + "/" + applicationProperties.getFriendsFileName();
+	public FileSystemResource ballResource() {
+		String filePath = applicationProperties.getCsvDir() + "/" + applicationProperties.getBallFileName();
 		return new FileSystemResource(filePath);
 	}
 
 	@Bean
-	public FlatFileItemReader<Friend> friendsReader() {
+	public FlatFileItemReader<BundleApplication> ballReader() {
 		return SpringBatchObjectFactory
-			.newCsvFileItemReader(friendsResource(), Friend.class, ";", 1);
+			.newCsvFileItemReader(ballResource(), BundleApplication.class, ",", 1);
 	}
 
 	@Bean
-	public JpaItemWriter<FriendsEntity> friendsWriter() {
+	public JpaItemWriter<BundleApplications> ballWriter() {
 		return SpringBatchObjectFactory.newJpaItemWriter(entityManagerFactory);
 	}
 
 	@Bean
-	public ItemProcessor<Friend, FriendsEntity> friendsProcessor() {
-		return new ItemProcessor<Friend, FriendsEntity>() {
+	public ItemProcessor<BundleApplication, BundleApplications> ballProcessor() {
+		return new ItemProcessor<BundleApplication, BundleApplications>() {
 			@Override
-			public FriendsEntity process(Friend item) throws Exception {
-				FriendsEntity entity = Mappers.getMapper(FriendsEntityMapper.class).toEntity(item);
+			public BundleApplications process(BundleApplication item) throws Exception {
+				BundleApplications entity = Mappers.getMapper(BundleApplicationsMapper.class).toEntity(item);
 				return entity;
 			}
 
@@ -66,9 +67,9 @@ public class CsvFileToFriendsStepConfiguration {
 	}
 
 	@Bean
-	public Step csvFileToFriendsStep() {
-		return stepBuilderFactory.get("csvFileToFriendsStep").<Friend, FriendsEntity>chunk(10)
-				.reader(friendsReader()).processor(friendsProcessor()).writer(friendsWriter()).faultTolerant()
+	public Step csvFileToBundleApplicationsStep() {
+		return stepBuilderFactory.get("csvFileToBundleApplicationsStep").<BundleApplication, BundleApplications>chunk(10)
+				.reader(ballReader()).processor(ballProcessor()).writer(ballWriter()).faultTolerant()
 				.skip(FlatFileParseException.class).skip(PersistenceException.class).skipLimit(10)
 				.allowStartIfComplete(true).transactionManager(transactionManager).build();
 	}

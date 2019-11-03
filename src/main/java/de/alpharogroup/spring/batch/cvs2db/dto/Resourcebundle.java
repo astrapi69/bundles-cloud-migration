@@ -40,7 +40,6 @@ import java.util.UUID;
 public class Resourcebundle
 {
 
-	UUID uuid;
 	Integer id;
 	Integer version;
 

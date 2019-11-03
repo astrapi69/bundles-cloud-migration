@@ -40,7 +40,6 @@ import java.util.UUID;
 public class LanguageLocale
 {
 
-	UUID uuid;
 	Integer id;
 	Integer version;
 	/** The locale of this entry. */

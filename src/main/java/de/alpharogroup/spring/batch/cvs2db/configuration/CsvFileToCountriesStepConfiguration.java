@@ -1,11 +1,15 @@
 package de.alpharogroup.spring.batch.cvs2db.configuration;
 
-import javax.persistence.EntityManagerFactory;
-
 import de.alpharogroup.spring.batch.cvs2db.dto.BaseName;
+import de.alpharogroup.spring.batch.cvs2db.dto.Country;
 import de.alpharogroup.spring.batch.cvs2db.entity.BaseNames;
+import de.alpharogroup.spring.batch.cvs2db.entity.Countries;
 import de.alpharogroup.spring.batch.cvs2db.mapper.BaseNamesMapper;
+import de.alpharogroup.spring.batch.cvs2db.mapper.CountriesMapper;
 import de.alpharogroup.spring.batch.factory.SpringBatchObjectFactory;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.mapstruct.factory.Mappers;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
@@ -17,14 +21,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.experimental.FieldDefaults;
+import javax.persistence.EntityManagerFactory;
 
 @Configuration
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CsvFileToBasenamesStepConfiguration
+public class CsvFileToCountriesStepConfiguration
 {
 
 	EntityManagerFactory entityManagerFactory;
@@ -36,36 +38,36 @@ public class CsvFileToBasenamesStepConfiguration
 	PlatformTransactionManager transactionManager;
 
 	@Bean
-	public FileSystemResource basenamesResource() {
-		String filePath = applicationProperties.getCsvDir() + "/" + applicationProperties.getBasenamesFileName();
+	public FileSystemResource countriesResource() {
+		String filePath = applicationProperties.getCsvDir() + "/" + applicationProperties.getCountriesFileName();
 		return new FileSystemResource(filePath);
 	}
 
 	@Bean
-	public FlatFileItemReader<BaseName> basenamesReader() {
-		return SpringBatchObjectFactory.newCsvFileItemReader(basenamesResource(), BaseName.class, ",", 1);
+	public FlatFileItemReader<Country> countriesReader() {
+		return SpringBatchObjectFactory.newCsvFileItemReader(countriesResource(), Country.class, ",", 1);
 	}
 
 	@Bean
-	public JpaItemWriter<BaseNames> basenamesWriter() {
+	public JpaItemWriter<Countries> countriesWriter() {
 		return SpringBatchObjectFactory.newJpaItemWriter(entityManagerFactory);
 	}
 
 	@Bean
-	public ItemProcessor<BaseName, BaseNames> basenamesProcessor() {
-		return new ItemProcessor<BaseName, BaseNames>() {
+	public ItemProcessor<Country, Countries> countriesProcessor() {
+		return new ItemProcessor<Country, Countries>() {
 			@Override
-			public BaseNames process(BaseName item) throws Exception {
-				BaseNames entity = Mappers.getMapper(BaseNamesMapper.class).toEntity(item);
-				return entity;
+			public Countries process(Country item) throws Exception {
+				return Mappers.getMapper(CountriesMapper.class).toEntity(item);
 			}
+
 		};
 	}
 
 	@Bean
-	public Step csvFileToBasenamesStep() {
-		return stepBuilderFactory.get("csvFileToBasenamesStep").<BaseName, BaseNames>chunk(10).reader(basenamesReader())
-				.processor(basenamesProcessor()).writer(basenamesWriter()).transactionManager(transactionManager).build();
+	public Step csvFileToCountriesStep() {
+		return stepBuilderFactory.get("csvFileToCountriesStep").<Country, Countries>chunk(10).reader(countriesReader())
+				.processor(countriesProcessor()).writer(countriesWriter()).transactionManager(transactionManager).build();
 	}
 
 }

@@ -40,7 +40,6 @@ import java.util.UUID;
 public class PropertiesValue
 {
 
-	UUID uuid;
 	Integer id;
 	Integer version;
 	String name;

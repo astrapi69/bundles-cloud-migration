@@ -39,7 +39,6 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BaseName
 {
-	UUID uuid;
 	Integer id;
 	Integer version;
 	String name;

@@ -27,12 +27,14 @@ package de.alpharogroup.spring.batch.cvs2db.mapper;
 import de.alpharogroup.bean.mapper.GenericMapper;
 import de.alpharogroup.spring.batch.cvs2db.dto.Resourcebundle;
 import de.alpharogroup.spring.batch.cvs2db.entity.Resourcebundles;
+import org.mapstruct.Mapper;
 import org.springframework.stereotype.Component;
 
 /**
  * The class {@link ResourcebundlesMapper}.
  */
 @Component
+@Mapper(componentModel="spring")
 public interface ResourcebundlesMapper extends GenericMapper<Resourcebundles, Resourcebundle>
 {
 }

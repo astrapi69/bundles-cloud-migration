@@ -40,7 +40,6 @@ import java.util.UUID;
 public class PropertiesKey
 {
 
-	UUID uuid;
 	Integer id;
 	Integer version;
 	String name;

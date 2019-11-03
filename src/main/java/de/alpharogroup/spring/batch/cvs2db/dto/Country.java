@@ -40,11 +40,8 @@ import java.util.UUID;
 public class Country
 {
 
-	UUID uuid;
 	Integer id;
-	Integer version;
 	String name;
-
 	/** The iso3166 name with two characters. */
 	 String iso3166a2name;
 

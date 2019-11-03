@@ -40,12 +40,9 @@ import java.util.UUID;
 public class Language
 {
 
-	UUID uuid;
 	Integer id;
-	Integer version;
 	String name;
-
-	/** The iso639_1 code with two characters. */
-	 String iso639Dash1;
+	Integer version;
+	String iso639Dash1;
 
 }

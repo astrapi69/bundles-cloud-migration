@@ -27,12 +27,14 @@ package de.alpharogroup.spring.batch.cvs2db.mapper;
 import de.alpharogroup.bean.mapper.GenericMapper;
 import de.alpharogroup.spring.batch.cvs2db.dto.BaseName;
 import de.alpharogroup.spring.batch.cvs2db.entity.BaseNames;
+import org.mapstruct.Mapper;
 import org.springframework.stereotype.Component;
 
 /**
  * The class {@link BaseNamesMapper}.
  */
 @Component
+@Mapper(componentModel="spring")
 public interface BaseNamesMapper extends GenericMapper<BaseNames, BaseName>
 {
 }

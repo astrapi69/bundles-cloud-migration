@@ -42,7 +42,6 @@ import java.util.UUID;
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class BundleApplication
 {
-	UUID uuid;
 	Integer id;
 	Integer version;
 	String name;

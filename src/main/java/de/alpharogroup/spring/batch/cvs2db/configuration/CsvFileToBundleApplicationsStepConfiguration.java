@@ -1,10 +1,14 @@
 package de.alpharogroup.spring.batch.cvs2db.configuration;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 
+import de.alpharogroup.collections.list.ListExtensions;
 import de.alpharogroup.spring.batch.cvs2db.dto.BundleApplication;
 import de.alpharogroup.spring.batch.cvs2db.entity.BundleApplications;
+import de.alpharogroup.spring.batch.cvs2db.entity.LanguageLocales;
 import de.alpharogroup.spring.batch.cvs2db.mapper.BundleApplicationsMapper;
 import de.alpharogroup.spring.batch.factory.SpringBatchObjectFactory;
 import org.mapstruct.factory.Mappers;
@@ -23,11 +27,15 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 @Configuration
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CsvFileToBundleApplicationsStepConfiguration
 {
+	@PersistenceContext
+	private EntityManager em;
 
 	EntityManagerFactory entityManagerFactory;
 
@@ -38,28 +46,35 @@ public class CsvFileToBundleApplicationsStepConfiguration
 	PlatformTransactionManager transactionManager;
 
 	@Bean
-	public FileSystemResource ballResource() {
-		String filePath = applicationProperties.getCsvDir() + "/" + applicationProperties.getBallFileName();
+	public FileSystemResource bundleApplicationsResource() {
+		String filePath = applicationProperties.getCsvDir() + "/" + applicationProperties.getBundleApplicationsFileName();
 		return new FileSystemResource(filePath);
 	}
 
 	@Bean
-	public FlatFileItemReader<BundleApplication> ballReader() {
+	public FlatFileItemReader<BundleApplication> bundleApplicationsReader() {
 		return SpringBatchObjectFactory
-			.newCsvFileItemReader(ballResource(), BundleApplication.class, ",", 1);
+			.newCsvFileItemReader(bundleApplicationsResource(), BundleApplication.class, ",", 1);
 	}
 
 	@Bean
-	public JpaItemWriter<BundleApplications> ballWriter() {
+	public JpaItemWriter<BundleApplications> bundleApplicationsWriter() {
 		return SpringBatchObjectFactory.newJpaItemWriter(entityManagerFactory);
 	}
 
 	@Bean
-	public ItemProcessor<BundleApplication, BundleApplications> ballProcessor() {
+	public ItemProcessor<BundleApplication, BundleApplications> bundleApplicationsProcessor() {
 		return new ItemProcessor<BundleApplication, BundleApplications>() {
 			@Override
 			public BundleApplications process(BundleApplication item) throws Exception {
-				BundleApplications entity = Mappers.getMapper(BundleApplicationsMapper.class).toEntity(item);
+				Integer defaultLocaleId = item.getDefaultLocale().getId();
+				List<?> languageLocales = em.createNativeQuery("SELECT * from language_locales ll where ll.id = ?1")
+				.setParameter(1, defaultLocaleId).getResultList();
+				LanguageLocales first =(LanguageLocales) ListExtensions.getFirst(languageLocales);
+				BundleApplications entity = BundleApplications.builder()
+					.defaultLocale(first)
+					.name(item.getName())
+					.build();
 				return entity;
 			}
 
@@ -69,7 +84,7 @@ public class CsvFileToBundleApplicationsStepConfiguration
 	@Bean
 	public Step csvFileToBundleApplicationsStep() {
 		return stepBuilderFactory.get("csvFileToBundleApplicationsStep").<BundleApplication, BundleApplications>chunk(10)
-				.reader(ballReader()).processor(ballProcessor()).writer(ballWriter()).faultTolerant()
+				.reader(bundleApplicationsReader()).processor(bundleApplicationsProcessor()).writer(bundleApplicationsWriter()).faultTolerant()
 				.skip(FlatFileParseException.class).skip(PersistenceException.class).skipLimit(10)
 				.allowStartIfComplete(true).transactionManager(transactionManager).build();
 	}

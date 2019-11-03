@@ -27,12 +27,14 @@ package de.alpharogroup.spring.batch.cvs2db.mapper;
 import de.alpharogroup.bean.mapper.GenericMapper;
 import de.alpharogroup.spring.batch.cvs2db.dto.Language;
 import de.alpharogroup.spring.batch.cvs2db.entity.Languages;
+import org.mapstruct.Mapper;
 import org.springframework.stereotype.Component;
 
 /**
  * The class {@link LanguagesMapper}.
  */
 @Component
+@Mapper(componentModel="spring")
 public interface LanguagesMapper extends GenericMapper<Languages, Language>
 {
 }

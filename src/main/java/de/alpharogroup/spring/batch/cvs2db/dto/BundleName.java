@@ -39,7 +39,6 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BundleName
 {
-	UUID uuid;
 	Integer id;
 	Integer version;
 	/** The bundle name. */

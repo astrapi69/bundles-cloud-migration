@@ -14,10 +14,17 @@ public class CsvToDatabaseJobConfiguration {
 	@Bean
 	public Job importCsvFilesJob(@NonNull JobBuilderFactory jobBuilderFactory,
 			CsvToDatabaseJobExecutionListener csvToDatabaseJobExecutionListener,
-		Step csvFileToBrosStep,
-			Step csvFileToFriendsStep) {
-		return jobBuilderFactory.get("importCsvFilesJob").incrementer(new RunIdIncrementer())
-				.listener(csvToDatabaseJobExecutionListener).start(csvFileToBrosStep).next(csvFileToFriendsStep)
+		Step csvFileToCountriesStep,
+		Step csvFileToLanguagesStep,
+		Step csvFileToLanguageLocalesStep,
+			Step csvFileToBundleApplicationsStep) {
+		return jobBuilderFactory.get("importCsvFilesJob")
+			.incrementer(new RunIdIncrementer())
+				.listener(csvToDatabaseJobExecutionListener)
+			.start(csvFileToCountriesStep)
+			.next(csvFileToLanguagesStep)
+			.next(csvFileToLanguageLocalesStep)
+			.next(csvFileToBundleApplicationsStep)
 				.build();
 	}
 }

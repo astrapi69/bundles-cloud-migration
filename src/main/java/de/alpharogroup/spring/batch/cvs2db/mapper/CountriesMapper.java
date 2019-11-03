@@ -27,12 +27,14 @@ package de.alpharogroup.spring.batch.cvs2db.mapper;
 import de.alpharogroup.bean.mapper.GenericMapper;
 import de.alpharogroup.spring.batch.cvs2db.dto.Country;
 import de.alpharogroup.spring.batch.cvs2db.entity.Countries;
+import org.mapstruct.Mapper;
 import org.springframework.stereotype.Component;
 
 /**
  * The class {@link CountriesMapper}.
  */
 @Component
+@Mapper(componentModel="spring")
 public interface CountriesMapper extends GenericMapper<Countries, Country>
 {
 }

@@ -27,12 +27,14 @@ package de.alpharogroup.spring.batch.cvs2db.mapper;
 import de.alpharogroup.bean.mapper.GenericMapper;
 import de.alpharogroup.spring.batch.cvs2db.dto.PropertiesValue;
 import de.alpharogroup.spring.batch.cvs2db.entity.PropertiesValues;
+import org.mapstruct.Mapper;
 import org.springframework.stereotype.Component;
 
 /**
  * The class {@link PropertiesValuesMapper}.
  */
 @Component
+@Mapper(componentModel="spring")
 public interface PropertiesValuesMapper
 	extends GenericMapper<PropertiesValues, PropertiesValue>
 {

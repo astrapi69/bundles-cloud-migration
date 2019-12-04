@@ -33,7 +33,7 @@ spring:
     password: ${app.db-password}
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
       format_sql: true
       generate_statistics: false
       jdbc:

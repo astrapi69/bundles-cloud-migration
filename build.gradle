@@ -31,15 +31,16 @@ repositories {
 
 ext {
 	lombokVersion = "1.18.10"
+	mapstructVersion = "1.3.1.Final"
 	entApiVersion = "1.4.1"
 	entCoreVersion = "1.7.1"
-	mapstructVersion = "1.3.1.Final"
 	springToolExtensionsVersion = "1.4"
 	jobjCoreVersion = "3.2.1"
 	genericMapperVersion = "2.1"
-	sillyJdbcVersion = "5.4"
+	sillyJdbcVersion = "5.7"
 	fileWorkerVersion = "5.3"
 	yamlToPropToYamlVersion = "1.1"
+	springBootExtensionsVersion = "1.2"
 }
 
 dependencies {
@@ -49,12 +50,13 @@ dependencies {
 	compile("org.mapstruct:mapstruct-processor:$mapstructVersion")
 	annotationProcessor("org.mapstruct:mapstruct-processor:$mapstructVersion")
 	compile "de.alpharogroup:file-worker:${fileWorkerVersion}"
+	compile "de.alpharogroup:spring-boot-extensions:${springBootExtensionsVersion}"
 	compile "de.alpharogroup:silly-jdbc:${sillyJdbcVersion}"
 	compile "de.alpharogroup:yaml-to-prop-to-yaml:${yamlToPropToYamlVersion}"
 	compile("de.alpharogroup:ent-core:$entCoreVersion")
 	compile("de.alpharogroup:generic-mapper:$genericMapperVersion")
 	compile("de.alpharogroup:jobj-core:$jobjCoreVersion")
-	compile("de.alpharogroup:spring-tool-extensions:$springToolExtensionsVersion")
+	compile"de.alpharogroup:spring-tool-extensions:${springToolExtensionsVersion}"
 	implementation("org.postgresql:postgresql")
 	implementation "org.springframework.boot:spring-boot-starter-web"
 	implementation("org.springframework.boot:spring-boot-starter-batch")
